@@ -1,5 +1,5 @@
 public abstract class Entity {
-    private final String name;
+    protected final String name;
     protected int health;
     protected int experience;
     protected int strength;

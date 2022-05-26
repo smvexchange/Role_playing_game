@@ -1,3 +1,5 @@
 public interface Fightable {
-    void attack();
+    void attack(Entity enemy);
+
+
 }
