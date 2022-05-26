@@ -1,9 +1,8 @@
-import java.util.Scanner;
-
 public class Trading implements Runnable {
-    Scanner scanner = new Scanner(System.in);
     Hero hero;
     Vendor vendor;
+    Hero.HealthPotion healthPotion;
+    Hero.ScrollOfPower scrollOfPower;
 
     public Trading(Hero hero, Vendor vendor) {
         this.hero = hero;
@@ -13,7 +12,7 @@ public class Trading implements Runnable {
     @Override
     public void run() {
         while (true) {
-            System.out.println("""
+            System.out.print("""
                     Вы находитесь в торговой лавке.
                     Что вы хотите?
                     1.Купить Зелье здоровья
@@ -21,11 +20,13 @@ public class Trading implements Runnable {
                     3.Проверить сумку
                     4.Вернуться в город
                     """);
-            switch (scanner.nextInt()) {
+            int command = Main.userInput();
+            switch (command) {
                 case 1 -> {
                     if (hero.gold - vendor.getHealingPotionPrice() >= 0) {
                         hero.backpack.addItem(new Hero.HealthPotion());
                         hero.gold -= vendor.getHealingPotionPrice();
+                        System.out.println("Получено Зелье здоровья.\n");
                     } else {
                         System.out.println("У вас недостаточно золота!");
                     }
@@ -34,6 +35,7 @@ public class Trading implements Runnable {
                     if (hero.gold - vendor.getScrollOfPowerPrice() >= 0) {
                         hero.backpack.addItem(new Hero.ScrollOfPower());
                         hero.gold -= vendor.getScrollOfPowerPrice();
+                        System.out.println("Получен Свиток силы.\n");
                     } else {
                         System.out.println("У вас недостаточно золота!");
                     }

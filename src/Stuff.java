@@ -9,7 +9,7 @@ public abstract class Stuff {
         this.quantity = 0;
     }
 
-    abstract void use();
+    abstract void use(Hero hero);
 
 
     public String toString() {

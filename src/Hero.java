@@ -15,6 +15,9 @@ public class Hero extends Entity implements Fightable {
     }
 
     public void showItems() {
+        if (backpack.listItems.isEmpty()) {
+            System.out.println("{ Empty }");
+        }
         System.out.println(backpack.listItems);
     }
 
@@ -37,7 +40,8 @@ public class Hero extends Entity implements Fightable {
         }
 
         @Override
-        void use() {
+        void use(Hero hero) {
+            hero.health += 20;
             quantity--;
         }
     }
@@ -50,8 +54,8 @@ public class Hero extends Entity implements Fightable {
         }
 
         @Override
-        void use() {
-
+        void use(Hero hero) {
+            hero.strength += 20;
             quantity--;
         }
     }
