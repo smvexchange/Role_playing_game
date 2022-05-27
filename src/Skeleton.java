@@ -7,6 +7,8 @@ public class Skeleton extends Entity implements Fightable{
 
     public Skeleton() {
         super("Скелет");
+        this.experience = 10;
+        this.gold = 20;
     }
 
     @Override

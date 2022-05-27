@@ -6,7 +6,6 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Введите имя вашего героя:");
         Hero hero = new Hero(scanner.nextLine());
-        World world = new World(hero);
         while (true) {
             System.out.print("""
                     Вы находитесь в городе.
@@ -18,11 +17,17 @@ public class Main {
                     """);
             int command = userInput();
             switch (command) {
-                case 1 -> new Trading(world.hero, world.vendor).run();
-                case 2 -> System.out.println("В разработке");
-                case 3 -> System.out.println("В разработке");
-                case 4 -> System.out.println("В разработке");
+                case 1 -> new Trading(hero).run();
+                case 2 -> new Fighting(hero, "forest").run();
+                case 3 -> new Fighting(hero, "cave").run();
+                case 4 -> {
+                    return;
+                }
                 default -> System.out.print("Выберите варианты 1, 2, 3 или 4.\n\n");
+            }
+
+            if (hero.health <= 0) {
+                break;
             }
         }
     }

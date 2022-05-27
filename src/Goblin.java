@@ -7,6 +7,8 @@ public class Goblin extends Entity implements Fightable{
 
     public Goblin() {
         super("Гоблин");
+        this.experience = 10;
+        this.gold = 20;
     }
 
     @Override

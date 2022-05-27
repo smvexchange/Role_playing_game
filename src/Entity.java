@@ -11,7 +11,7 @@ public abstract class Entity {
         this.health = 100;
         this.experience = 0;
         this.strength = 20;
-        this.agility = 10;
-        this.gold = 20;
+        this.agility = 25;
+        this.gold = 60;
     }
 }

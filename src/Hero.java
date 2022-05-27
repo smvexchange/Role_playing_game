@@ -4,10 +4,17 @@ import java.util.Random;
 
 public class Hero extends Entity implements Fightable {
     Backpack backpack;
+    HealthPotion healthPotion;
+    ScrollOfPower scrollOfPower;
+    int healthCap = 100;
+    int level = 1;
+    int levelCap = 10;
 
     public Hero(String name) {
         super(name);
         this.backpack = new Backpack();
+        this.healthPotion = new HealthPotion();
+        this.scrollOfPower = new ScrollOfPower();
     }
 
     @Override
@@ -28,9 +35,11 @@ public class Hero extends Entity implements Fightable {
 
     public void showItems() {
         if (backpack.listItems.isEmpty()) {
-            System.out.println("{ Empty }");
+            System.out.println("{Empty}");
+        } else {
+            System.out.println(backpack.listItems);
+            System.out.println();
         }
-        System.out.println(backpack.listItems);
     }
 
     static class Backpack {
@@ -48,27 +57,45 @@ public class Hero extends Entity implements Fightable {
     static class HealthPotion extends Stuff {
         public HealthPotion() {
             super("HealthPotion");
-            quantity++;
+        }
+
+        public HealthPotion(int quantity) {
+            super("Зелье здоровья");
+            this.quantity = quantity;
         }
 
         @Override
         void use(Hero hero) {
-            hero.health += 20;
-            quantity--;
+            if (hero.healthPotion.quantity > 0) {
+                hero.health += 20;
+                quantity--;
+                System.out.printf("%s лечится на 20 единиц.\n", hero.name);
+            } else {
+                System.out.println("Зелья кончились!");
+            }
         }
     }
 
     static class ScrollOfPower extends Stuff {
 
         public ScrollOfPower() {
-            super("ScrollOfPower");
-            quantity++;
+            super("Свиток силы");
+        }
+
+        public ScrollOfPower(int quantity) {
+            super("Свиток силы");
+            this.quantity = quantity;
         }
 
         @Override
         void use(Hero hero) {
-            hero.strength += 20;
-            quantity--;
+            if (hero.scrollOfPower.quantity > 0) {
+                hero.strength += 20;
+                quantity--;
+                System.out.printf("%s увеличивает силу на 20 единиц.\n", hero.name);
+            } else {
+                System.out.println("Свитки кончились!");
+            }
         }
     }
 }
