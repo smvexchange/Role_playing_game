@@ -1,29 +1,38 @@
-import java.util.Random;
-
-public class Goblin extends Entity implements Fightable{
-    public Goblin(String name) {
-        super(name);
-    }
+public class Goblin extends Creature implements Fighter {
 
     public Goblin() {
-        super("Гоблин");
-        this.experience = 10;
-        this.gold = 20;
+        super("Гоблин", 10, 20);
+    }
+
+    private void getBuff() {
+        if ((int) (Math.random() * 4) == 1) {
+            if (isBuff()) {
+                setBuffDuration(getBuffDuration() + 1);
+                System.out.printf("%s продлевает усиление ловкости на 1 ход.\n", getName());
+            } else {
+                setBuff(true);
+                setBuffDuration(getBuffDuration() + 1);
+                setAgility(getAgility() + 30);
+                System.out.printf("%s получает усиление ловкости на 30 единиц на 2 хода.\n",
+                        getName());
+            }
+        }
+    }
+
+    private void deBuff() {
+        if (getBuffDuration() > 0) {
+            setBuffDuration(getBuffDuration() - 1);
+        } else if (isBuff()) {
+            setBuff(false);
+            setAgility(getAgility() - 30);
+            System.out.println("Усиление ловкости заканчивается.");
+        }
     }
 
     @Override
-    public void attack(Entity enemy) {
-        Random random = new Random();
-        if (agility * 3 > random.nextInt(100)) {
-            if (random.nextInt(3) == 1) {
-                enemy.health -= strength * 2;
-                System.out.println(name + " наносит критический удар на " + (strength * 2) + " единиц.");
-            } else {
-                enemy.health -= strength;
-                System.out.println(name + " наносит удар на " + strength + " единиц.");
-            }
-        } else {
-            System.out.println(name + " промахивается.");
-        }
+    public void attack(Creature enemy) {
+        getBuff();
+        super.attack(enemy);
+        deBuff();
     }
 }

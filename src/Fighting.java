@@ -1,5 +1,3 @@
-import java.util.Random;
-
 public class Fighting implements Runnable {
     Hero hero;
     String location;
@@ -12,10 +10,9 @@ public class Fighting implements Runnable {
     @Override
     public void run() {
         while (true) {
-            Entity enemy;
-            Random random = new Random();
+            Creature enemy;
             if (location.equals("forest")) {
-                if (random.nextInt(2) == 1) {
+                if ((int) (Math.random() * 3) == 1) {
                     enemy = new Skeleton();
                 } else {
                     enemy = new Goblin();
@@ -23,7 +20,7 @@ public class Fighting implements Runnable {
             } else {
                 enemy = new Dragon();
             }
-            System.out.println("Перед вами " + enemy.name + ". Бой начинается!");
+            System.out.println("Перед вами " + enemy.getName() + ". Бой начинается!");
             boolean isAlive = true;
             int count = 1;
             while (isAlive) {
@@ -40,38 +37,48 @@ public class Fighting implements Runnable {
                     case 3 -> hero.scrollOfPower.use(hero);
                     default -> System.out.println("Выберите варианты 1, 2, 3");
                 }
-                ((Fightable) enemy).attack(hero);
-                if (enemy.health > 0 && hero.health > 0) {
+                ((Fighter) enemy).attack(hero);
+                if (enemy.getHealth() > 0 && hero.getHealth() > 0) {
                     System.out.println("*******Результат хода*******");
-                    System.out.printf("Здоровье %s %d единиц.\n", enemy.name, enemy.health);
-                    System.out.printf("Здоровье %s %d единиц.\n", hero.name, hero.health);
+                    System.out.printf("Здоровье %s %d единиц. Сила %d единиц. Ловкость %d единиц.\n",
+                            enemy.getName(), enemy.getHealth(), enemy.getStrength(), enemy.getAgility());
+                    System.out.printf("Здоровье %s %d единиц. Сила %d единиц. Ловкость %d единиц.\n",
+                            hero.getName(), hero.getHealth(), hero.getStrength(), hero.getAgility());
                     System.out.println("****************************");
-
                     count++;
-                } else if (enemy.health <= 0) {
+                    if (hero.isBuff() && hero.getBuffDuration() > 1) {
+                        hero.setBuffDuration(hero.getBuffDuration() - 1);
+                    } else if (hero.isBuff() && hero.getBuffDuration() == 1) {
+                        hero.setBuff(false);
+                        hero.setBuffDuration(hero.getBuffDuration() - 1);
+                        hero.setStrength(hero.getStrength() - hero.scrollOfPower.getIncrement());
+                    }
+                } else if (enemy.getHealth() <= 0 && hero.getHealth() > 0) {
                     System.out.println("*******Результат хода*******");
-                    System.out.printf("%s побеждает\n", hero.name);
-                    System.out.printf("Получено %d золота и %d опыта\n", enemy.gold, enemy.experience);
+                    System.out.printf("%s побеждает.\n", hero.getName());
+                    System.out.printf("Получено %d золота и %d опыта.\n", enemy.getGold(), enemy.getExperience());
                     System.out.println("****************************");
-                    hero.gold += enemy.gold;
-                    hero.experience += enemy.experience;
+                    hero.setGold(hero.getGold() + enemy.getGold());
+                    hero.setExperience(hero.getExperience() + enemy.getExperience());
                     isAlive = false;
                 } else {
                     System.out.println("*******Результат хода*******");
-                    System.out.printf("%s погибает\n", hero.name);
+                    System.out.printf("%s погибает.\n", hero.getName());
                     System.out.println("****************************");
                     isAlive = false;
                 }
             }
-            if (hero.health > 0) {
-                if (hero.experience >= hero.levelCap) {
-                    hero.level++;
-                    hero.healthCap += 5;
-                    hero.health = hero.healthCap;
-                    hero.levelCap *= 2;
-                    hero.strength += 5;
-                    hero.agility += 5;
-                    System.out.printf("%s достиг уровня %d!\n", hero.name, hero.level);
+            if (hero.getHealth() > 0) {
+                if (hero.getExperience() >= hero.getLevelCap()) {
+                    int increment = 3;
+                    hero.setLevel(hero.getLevel() + 1);
+                    hero.setHealthCap(hero.getHealthCap() + increment);
+                    hero.setHealth(hero.getHealthCap());
+                    hero.setLevelCap(hero.getLevelCap() * 2);
+                    hero.setStrength(hero.getStrength() + increment);
+                    hero.setAgility(hero.getAgility() + increment);
+                    System.out.printf("%s достиг уровня %d! Сила, ловкость и здоровье увеличены на %d единиц.\n",
+                            hero.getName(), hero.getLevel(), increment);
                     System.out.println("****************************");
                 }
                 System.out.print("Куда дальше?\n1. Вернуться в город\n2. Продолжить бой\n");

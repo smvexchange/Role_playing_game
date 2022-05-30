@@ -1,36 +1,44 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
-public class Hero extends Entity implements Fightable {
+public class Hero extends Creature implements Fighter {
     Backpack backpack;
-    HealthPotion healthPotion;
-    ScrollOfPower scrollOfPower;
-    int healthCap = 100;
-    int level = 1;
-    int levelCap = 10;
+    Merchant.HealthPotion healthPotion;
+    Merchant.ScrollOfPower scrollOfPower;
+    private int healthCap = 200;
+    private int level = 1;
+    private int levelCap = 20;
 
     public Hero(String name) {
-        super(name);
+        super(name, 0, 100);
+        setHealth(healthCap);
         this.backpack = new Backpack();
-        this.healthPotion = new HealthPotion();
-        this.scrollOfPower = new ScrollOfPower();
+        this.healthPotion = new Merchant.HealthPotion();
+        this.scrollOfPower = new Merchant.ScrollOfPower();
     }
 
-    @Override
-    public void attack(Entity enemy) {
-        Random random = new Random();
-        if (agility * 3 > random.nextInt(100)) {
-            if (random.nextInt(3) == 1) {
-                enemy.health -= strength * 2;
-                System.out.println(name + " наносит критический удар на " + (strength * 2) + " единиц.");
-            } else {
-                enemy.health -= strength;
-                System.out.println(name + " наносит удар на " + strength + " единиц.");
-            }
-        } else {
-            System.out.println(name + " промахивается.");
-        }
+    public int getHealthCap() {
+        return healthCap;
+    }
+
+    public void setHealthCap(int healthCap) {
+        this.healthCap = healthCap;
+    }
+
+    public int getLevel() {
+        return level;
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+    }
+
+    public int getLevelCap() {
+        return levelCap;
+    }
+
+    public void setLevelCap(int levelCap) {
+        this.levelCap = levelCap;
     }
 
     public void showItems() {
@@ -46,55 +54,10 @@ public class Hero extends Entity implements Fightable {
         Map<String, Integer> listItems = new HashMap<>();
 
         public void addItem(Stuff item) {
-            if (listItems.containsKey(item.description)) {
-                listItems.put(item.description, listItems.get(item.description) + 1);
+            if (listItems.containsKey(item.getDescription())) {
+                listItems.put(item.getDescription(), listItems.get(item.getDescription()) + 1);
             } else {
-                listItems.put(item.description, item.quantity);
-            }
-        }
-    }
-
-    static class HealthPotion extends Stuff {
-        public HealthPotion() {
-            super("HealthPotion");
-        }
-
-        public HealthPotion(int quantity) {
-            super("Зелье здоровья");
-            this.quantity = quantity;
-        }
-
-        @Override
-        void use(Hero hero) {
-            if (hero.healthPotion.quantity > 0) {
-                hero.health += 20;
-                quantity--;
-                System.out.printf("%s лечится на 20 единиц.\n", hero.name);
-            } else {
-                System.out.println("Зелья кончились!");
-            }
-        }
-    }
-
-    static class ScrollOfPower extends Stuff {
-
-        public ScrollOfPower() {
-            super("Свиток силы");
-        }
-
-        public ScrollOfPower(int quantity) {
-            super("Свиток силы");
-            this.quantity = quantity;
-        }
-
-        @Override
-        void use(Hero hero) {
-            if (hero.scrollOfPower.quantity > 0) {
-                hero.strength += 20;
-                quantity--;
-                System.out.printf("%s увеличивает силу на 20 единиц.\n", hero.name);
-            } else {
-                System.out.println("Свитки кончились!");
+                listItems.put(item.getDescription(), item.getQuantity());
             }
         }
     }
